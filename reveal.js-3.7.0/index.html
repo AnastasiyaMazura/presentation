@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h1>JavaScript Scope</h1>
+			</section>
+			<section>
+				<section>
+					<h2>Scope</h2>
+					<p>is the accessibility of variables, functions, and objects in some particular part
+						of your code during runtime
+					</p>
+				</section>
+				<section>
+					<h2>Types of Scope</h2>
+					<ul>
+						<li class="fragment">Global</li>
+						<li class="fragment">Local</li>
+					</ul>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h2>Global scope</h2>
+					<pre class="fragment"><code data-trim data-noescape>
+var global = 'Global variable.';
+function saySomething() {
+  console.log(global);
+}
+console.log(global); // 'Global variable.'
+saySomething(); // 'Global variable.'
+          </code></pre>
+				</section>
+				<section>
+					<article>
+						<p>Declaration with var</p>
+						<pre><code data-trim data-noescape>
+var variable = 'Variable';
+var variable = 'Other Variable';
+console.log(variable); //'Other Variable'
+              </code></pre>
+					</article>
+					<article class="fragment">
+						<p>Block Statements</p>
+						<pre><code data-trim data-noescape>
+if (true) {
+    // this 'if' conditional block doesn't create a new scope
+    var name = 'Hammad'; // name is still in the global scope
+}
+console.log(name); // logs 'Hammad'
+              </code></pre>
+					</article>
+				</section>
+                <section>
+                    <article>
+                        <p>Declaration with let/const</p>
+                        <pre><code data-trim data-noescape>
+var name = 'Hammad';
+let likes = 'Coding';
+const skills = 'Javascript and PHP';
+              </code></pre>
+                    </article>
+                </section>
+				<section>
+						<p>Automatically Global</p>
+                    <div class="fragment">
+						<pre><code data-trim data-noescape>
+myFunction();
+// code here can use carName
+function myFunction() {
+  carName = "Volvo";
+}
+              </code></pre>
+					</div>
+					<div>
+						<p class="fragment">Global Variables in HTML</p>
+						<p class="fragment">global = window</p>
+						<pre class="fragment"><code data-trim data-noescape>
+var carName = "Volvo";
+console.log(carName); //"Volvo"
+console.log(window.carName); //"Volvo"
+              </code></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h2>Local Scope</h2>
+					<p class="fragment">Variables are usable only in a specific part of the code</p>
+					<ul>
+						<li class="fragment">function scope</li>
+						<li class="fragment">block scope(ES2015+)</li>
+					</ul>
+				</section>
+				<section>
+					<p>Function scope</p>
+					<p class="fragment">Variables defined inside a function are in the local scope</p>
+					<pre class="fragment"><code data-trim data-noescape>
+// Global Scope
+function someFunction() {
+    // Local Scope #1
+}
+// Global Scope
+function anotherFunction() {
+    // Local Scope #2
+}
+// Global Scope
+            </code></pre>
+				</section>
+				<section>
+						<p>Usage the same variable name in different functions</p>
+						<pre><code data-trim data-noescape>
+function firstFunction(){
+  var carName = 'Volvo';
+  console.log(carName); // Volvo
+}
+
+function secondFunction(){
+  var carName = 'Volvo';
+  console.log(carName); // Volvo
+}
+              </code></pre>
+					</section>
+                <section>
+                        <p>Functions do not have access to each other's scopes</p>
+						<pre><code data-trim data-noescape>
+function firstFunction(){
+  var numberOfFunction = 1;
+  var carName = 'Volvo';
+  console.log(carName); // Volvo
+}
+
+function secondFunction(){
+  var carName = 'Audi';
+  console.log(carName); // Audi
+  firstFunction();
+  console.log(numberOfFunction); //Error
+}
+              </code></pre>
+            </section>
+				<section>
+					<p>Block scope</p><div class="fragment">
+                    <p>Variable hello is scoped to the curly brace</p>
+					<pre><code data-trim data-noescape>
+{
+  const hello = 'Hello World!'
+  console.log(hello) // 'Hello World!'
+}
+
+console.log(hello) // Error, hello is not defined
+                    </code></pre></div>
+				</section>
+			</section>
+			<section>
+				<h2>Nested scopes</h2>
+				<p class="fragment">the ability of an inner function to access the scope of an outer function</p>
+				<pre class="fragment"><code data-trim data-noescape>
+function outerFunction () {
+  const outer = `Outer function`
+
+  function innerFunction() {
+    const inner = `Inner function`
+    console.log(outer) // Outer function
+  }
+
+  console.log(inner) // Error, inner is not defined
+}
+            </code></pre>
+			</section>
+			<section>
+				<h2>Scope shadowing</h2>
+				<p class="fragment">the priority of the local variable over the global</p>
+				<pre class="fragment"><code data-trim data-noescape>
+var scope = "global"; //Declare a global variable
+function checkscope() {
+  var scope = "local"; //Declare a local variable with the same name
+  return scope; //Return the local value, not the global one
+}
+checkscope() //"local"
+          </code></pre>
+			</section>
+			<section>
+				<section>
+					<h2>Remember!</h2>
+					<ul>
+						<li class="fragment">Do NOT create global variables</li>
+						<li class="fragment">Use local variables because of:
+							<ul>
+								<li class="fragment">Security</li>
+								<li class="fragment">Reducing Namespace Collisions </li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section>
+				<h2>Thanks</h2>
+			</section>
+		</div>
+	</div>
+
+
+	<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
